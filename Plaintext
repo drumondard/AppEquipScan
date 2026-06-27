@@ -1,26 +1,59 @@
 
+# Plaintext
+AppEquipScan/
+├── app.py                # Ponto de entrada da aplicação Web (FastAPI/Flask)
+├── bot/                  # Opcional: Manter a lógica do bot se precisar de interface híbrida
+├── services/             # Módulos reutilizados:
+│   ├── ai_service.py     # Lógica de análise de imagem
+│   ├── gcs_service.py    # Upload para nuvem
+│   └── bigquery_service.py # Inserção de dados
+├── static/               # Imagens (logo.png, banner.jpg) e CSS
+├── templates/            # Arquivos HTML (index.html)
+├── requirements.txt      # Dependências
+└── .gitignore            # Arquivos ignorados (venv, .env, etc.)
+
+-----------------------------------------------------
 Servidor: 10.119.13.58
 cd /AppEquipScan
 -----------------------------------------------------
--->> GIT
+# -->> GIT
 git add .
 git commit -m "Atualização para Desenvolvimento"
 git push
 -----------------------------------------------------
+# ==>> Rode o container
+# 1. Construir a imagem (dê um nome a ela)
+sudo docker build \
+  --build-arg http_proxy=http://10.130.12.13:82 \
+  --build-arg https_proxy=http://10.130.12.13:82 \
+  -t app-equip-scan .
+
+# 2. Rodar o container
+sudo docker run -d \
+  --name equip-scan \
+  -p 8081:8081 \
+  -v /home/inventario/automacao/config/.env:/app/.env \
+  app-equip-scan
 
 
-# 1. Inicializar o git na pasta
-git init
+-----------------------------------------------------
+# ==>> Rodar o Build do Docker
+#Dentro de /AppEquipScan/
+sudo docker build -t app-equip-scan .
 
-# 2. Adicionar o README e o gitignore que o GitHub criou (ou criar os seus localmente)
-git add .
+# ==>> Subir o Container em modo de Teste
+sudo docker run -p 8081:8081 \
+  -v /home/inventario/automacao/config/.env:/app/.env \
+  app-equip-scan
+-----------------------------------------------------
 
-# 3. Fazer o primeiro commit
-git commit -m "Inicialização do projeto de visão computacional"
 
-# 4. Conectar com o repositório remoto (substitua pela sua URL)
-git remote add origin https://github.com/drumondard/AppEquipScan.git
+==>> dentro da pasta AppEquipScan, instale as dependências e inicie:
+pip install -r requirements.txt
+uvicorn app:app --reload --host 0.0.0.0 --port 8081
 
-# 5. Enviar para o GitHub
-git branch -M main
-git push -u origin main
+/home/inventario/automacao/py/myenv/bin/uvicorn app:app --host 0.0.0.0 --port 8081
+
+-----------------------------------------------------
+
+

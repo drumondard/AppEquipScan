@@ -1,0 +1,42 @@
+# Ambientes virtuais
+venv/
+.venv/
+env/
+ENV/
+
+# Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Git
+.git
+.gitignore
+
+# Credenciais e configurações locais (Segurança)
+.env
+.envrc
+.pytest_cache/
+.ruff_cache/
+
+# Documentação e Logs
+docs/
+*.log
+*.tmp
+*.bak
+
+# Arquivos de IDE
+.idea/
+.vscode/
+.spyderproject
+.spyproject
+
+# Arquivos de teste
+tests/
+coverage.xml
+htmlcov/
+
+# Outros
+Dockerfile
+*.md
