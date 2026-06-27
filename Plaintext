@@ -1,0 +1,26 @@
+
+Servidor: 10.119.13.58
+cd /AppEquipScan
+-----------------------------------------------------
+-->> GIT
+git add .
+git commit -m "Atualização para Desenvolvimento"
+git push
+-----------------------------------------------------
+
+
+# 1. Inicializar o git na pasta
+git init
+
+# 2. Adicionar o README e o gitignore que o GitHub criou (ou criar os seus localmente)
+git add .
+
+# 3. Fazer o primeiro commit
+git commit -m "Inicialização do projeto de visão computacional"
+
+# 4. Conectar com o repositório remoto (substitua pela sua URL)
+git remote add origin https://github.com/drumondard/AppEquipScan.git
+
+# 5. Enviar para o GitHub
+git branch -M main
+git push -u origin main
