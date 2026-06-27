@@ -11,8 +11,32 @@ import os
 import uuid
 from dotenv import load_dotenv
 
-# Carrega o .env que montaremos via volume no Docker
-load_dotenv("/app/.env") 
+import os
+from dotenv import load_dotenv
+
+# Tenta carregar o arquivo, mas não trava se não encontrar, avisa no log
+dotenv_path = "/app/config/.env"
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path)
+    print(f"DEBUG: Arquivo .env carregado de {dotenv_path}")
+else:
+    print(f"DEBUG: Arquivo .env NÃO encontrado em {dotenv_path}")
+
+# Tenta buscar a variável
+cred_path = os.getenv("GCP_CREDENTIALS_SERV_INVENTARIO")
+
+cred_path = os.getenv("GCP_CREDENTIALS_SERV_INVENTARIO")
+print(f"DEBUG: Caminho lido do .env: {cred_path}") # Isso aparecerá no docker logs
+
+if not cred_path:
+    # Se ainda estiver None, vamos listar o que tem no .env
+    with open(dotenv_path, "r") as f:
+        print("DEBUG: Conteúdo do .env:")
+        print(f.read())
+    raise FileNotFoundError("Variável GCP_CREDENTIALS_SERV_INVENTARIO não encontrada no .env")
+
+if not os.path.exists(cred_path):
+    raise FileNotFoundError(f"Arquivo de credenciais não encontrado em: {cred_path}")
 
 app = FastAPI()
 

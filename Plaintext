@@ -28,31 +28,29 @@ sudo docker build \
   --build-arg https_proxy=http://10.130.12.13:82 \
   -t app-equip-scan .
 
-# 2. Rodar o container
+# 2. Roda o container mapeando as pastas de credenciais
 sudo docker run -d \
   --name equip-scan \
   -p 8081:8081 \
-  -v /home/inventario/automacao/config/.env:/app/.env \
+  -v /credenciais:/app/credenciais \
+  -e GCP_CREDENTIALS_SERV_INVENTARIO="/app/credenciais/conta_servico/vtal-inventariorede-prd.json" \
+  --restart unless-stopped \
   app-equip-scan
+
+# 3. Verificar se o container está rodando
+sudo docker ps
+
+# log
+sudo docker logs -f equip-scan
+
+# Remove o container que está falhando
+sudo docker rm -f equip-scan
 
 
 -----------------------------------------------------
-# ==>> Rodar o Build do Docker
-#Dentro de /AppEquipScan/
-sudo docker build -t app-equip-scan .
-
-# ==>> Subir o Container em modo de Teste
-sudo docker run -p 8081:8081 \
-  -v /home/inventario/automacao/config/.env:/app/.env \
-  app-equip-scan
+http://10.119.13.58:8081/
 -----------------------------------------------------
 
-
-==>> dentro da pasta AppEquipScan, instale as dependências e inicie:
-pip install -r requirements.txt
-uvicorn app:app --reload --host 0.0.0.0 --port 8081
-
-/home/inventario/automacao/py/myenv/bin/uvicorn app:app --host 0.0.0.0 --port 8081
 
 -----------------------------------------------------
 
