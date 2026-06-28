@@ -1,16 +1,39 @@
-<script>
-async function enviarFoto() {
-    const input = document.getElementById('file-upload');
-    const formData = new FormData();
-    formData.append('file', input.files[0]);
-
-    const response = await fetch('/upload', {
-        method: 'POST',
-        body: formData
-    });
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>AppEquipScan</title>
+</head>
+<body>
+    <h1>Scanner de Equipamentos</h1>
     
-    const result = await response.json();
-    alert('IA Identificou: ' + result.dados.modelo);
-    console.log(result);
-}
-</script>
+    <input type="file" id="file-upload" accept="image/*">
+    <button onclick="enviarFoto()">Enviar Foto</button>
+
+    <script>
+        async function enviarFoto() {
+            const input = document.getElementById('file-upload');
+            if (!input.files[0]) {
+                alert("Por favor, selecione uma imagem.");
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('file', input.files[0]);
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                alert('IA Identificou: ' + JSON.stringify(result));
+                console.log(result);
+            } catch (error) {
+                alert('Erro ao enviar imagem.');
+            }
+        }
+    </script>
+</body>
+</html>

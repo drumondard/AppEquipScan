@@ -1,0 +1,19 @@
+name: app-equip-scan
+
+services:
+  app-equip-scan:
+    build:
+      context: .
+      args:
+        - http_proxy=http://10.130.12.13:82
+        - https_proxy=http://10.130.12.13:82
+    container_name: equip-scan
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    volumes:
+      # Mapeia a pasta local de credenciais para dentro do container
+      - /credenciais:/app/credenciais
+    environment:
+      # Caminho da credencial conforme configurado na aplicação
+      - GCP_CREDENTIALS_SERV_INVENTARIO=/app/credenciais/conta_servico/vtal-inventariorede-prd.json

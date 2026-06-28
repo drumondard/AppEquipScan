@@ -45,6 +45,11 @@ sudo docker logs -f equip-scan
 
 # Remove o container que está falhando
 sudo docker rm -f equip-scan
+-----------------------------------------------------
+# 1 > Reinicie o container
+sudo docker restart equip-scan
+# 2 > Verifique os logs
+sudo docker logs -f equip-scan
 
 
 -----------------------------------------------------
