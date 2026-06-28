@@ -46,6 +46,8 @@ sudo docker logs -f equip-scan
 # Remove o container que está falhando
 sudo docker rm -f equip-scan
 -----------------------------------------------------
+# subir o seu projeto
+docker compose -p app-equip-scan up -d
 # 1 > Reinicie o container
 sudo docker restart equip-scan
 # 2 > Verifique os logs
@@ -55,8 +57,27 @@ sudo docker logs -f equip-scan
 -----------------------------------------------------
 http://10.119.13.58:8081/
 -----------------------------------------------------
+# >>>>> Construir e subir pelo docker-compose <<<<<
+# 1º
+docker-compose up -d --build
+# 2º ver os logs
+docker-compose logs -f
+# 3º Parar o container
+docker-compose down
 
+Verificar o status: docker compose ps
 
+Reiniciar o serviço: docker compose restart
+
+Ver logs em tempo real: docker compose logs -f
+
+# >>>>> Start no docker compose <<<<<
+# Pare o container antigo
+docker compose -p app-equip-scan down
+# Suba novamente
+docker compose -p app-equip-scan up -d --build
+# Verifique os logs
+docker compose -p app-equip-scan logs -f
 -----------------------------------------------------
 
 

@@ -4,6 +4,7 @@ services:
   app-equip-scan:
     build:
       context: .
+      dockerfile: Dockerfile
       args:
         - http_proxy=http://10.130.12.13:82
         - https_proxy=http://10.130.12.13:82
@@ -16,4 +17,5 @@ services:
       - /credenciais:/app/credenciais
     environment:
       # Caminho da credencial conforme configurado na aplicação
-      - GCP_CREDENTIALS_SERV_INVENTARIO=/app/credenciais/conta_servico/vtal-inventariorede-prd.json
+      - GCP_CREDENTIALS_SERV_INVENTARIO=/credenciais/conta_servico/vtal-inventariorede-prd.json
+    command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8081"]
