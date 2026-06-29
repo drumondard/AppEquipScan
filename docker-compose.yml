@@ -14,8 +14,15 @@ services:
       - "8081:8081"
     volumes:
       # Mapeia a pasta local de credenciais para dentro do container
-      - /credenciais:/app/credenciais
+      - /credenciais:/credenciais
     environment:
       # Caminho da credencial conforme configurado na aplicação
       - GCP_CREDENTIALS_SERV_INVENTARIO=/credenciais/conta_servico/vtal-inventariorede-prd.json
+      # Adicione a variável da chave do Gemini aqui
+      - GEMINI_API_KEY={key}
+      # PROXY
+      - http_proxy=http://10.130.12.13:82
+      - https_proxy=http://10.130.12.13:82
     command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8081"]
+
+
