@@ -1,4 +1,5 @@
 import os
+import uvicorn
 from fastapi import FastAPI, Request, UploadFile, File
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
@@ -15,38 +16,29 @@ load_dotenv()
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
-ID_BUCKET_FOTOS='vtal-bucket-inventariorede-prd/fotos_bot_telegram'
+ID_BUCKET_FOTOS = 'vtal-bucket-inventariorede-prd'
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
-    try:
-        return templates.TemplateResponse(
-            request=request, 
-            name="index.html", 
-            context={"message": "Sucesso"}
-        )
-    except Exception as e:
-        return HTMLResponse(content=f"<h1>Erro ao carregar template: {str(e)}</h1>", status_code=500)
+    return templates.TemplateResponse(request=request, name="index.html", context={"message": "Sucesso"})
 
 @app.post("/upload")
 async def upload(file: UploadFile = File(...)):
     try:
-        # 1. Preparação dos serviços
-        # O GCS utiliza a variável GOOGLE_APPLICATION_CREDENTIALS definida no docker-compose
-        gcs = GCSService(credentials=None)
-        bq_client = bigquery.Client()
+        # Instancie o serviço sem argumentos
+        gcs = GCSService()
+        bq_client = bigquery.Client(project="vtal-inventariorede-prd")
         
-        # 2. Processamento da imagem
         image_bytes = await file.read()
         dados_ia = extrair_dados_equipamento(image_bytes)
         
-        # 3. Upload para GCS
-        # Substitua 'NOME_DO_SEU_BUCKET' pelo nome real do seu bucket no GCS
-        gcs_url = gcs.upload_file(ID_BUCKET_FOTOS, image_bytes, file.filename)
+        # Upload para GCS
+        caminho_blob = f"fotos_bot_telegram/{file.filename}"
+        gcs_url = gcs.upload_file(ID_BUCKET_FOTOS, image_bytes, caminho_blob)
         
-        # 4. Salvar no BigQuery
+        # Salvar no BigQuery
         dados_para_bq = {
-            "user_id": 123,  # Pode integrar com autenticação real depois
+            "user_id": 123,
             "idsap": "N/A",
             "hostname": "N/A",
             "dados_ia": dados_ia,
@@ -58,9 +50,8 @@ async def upload(file: UploadFile = File(...)):
         
     except Exception as e:
         import traceback
-        traceback.print_exc() # Isso imprimirá o erro detalhado nos logs do Docker
+        traceback.print_exc()
         return JSONResponse(status_code=500, content={"error": str(e)})
 
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8081)

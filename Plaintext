@@ -72,6 +72,8 @@ Reiniciar o serviço: docker compose restart
 Ver logs em tempo real: docker compose logs -f
 
 # >>>>> Start no docker compose <<<<<
+# Remova o contêiner
+docker rm -f equip-scan
 # Pare o container antigo
 docker compose -p app-equip-scan down
 # Suba novamente
