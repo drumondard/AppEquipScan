@@ -14,6 +14,7 @@ AppEquipScan/
 
 -----------------------------------------------------
 Servidor: 10.119.13.58
+Pagina: http://10.119.13.58:8081/
 cd /AppEquipScan
 -----------------------------------------------------
 # -->> GIT
@@ -53,10 +54,8 @@ sudo docker restart equip-scan
 # 2 > Verifique os logs
 sudo docker logs -f equip-scan
 
+-----------------------------------------------------
 
------------------------------------------------------
-http://10.119.13.58:8081/
------------------------------------------------------
 # >>>>> Construir e subir pelo docker-compose <<<<<
 # 1º
 docker-compose up -d --build
