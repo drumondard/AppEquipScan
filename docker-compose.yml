@@ -16,7 +16,7 @@ services:
     volumes:
       # Mapeia a pasta local de credenciais para dentro do container
       ##- /credenciais:/credenciais
-      - .:/app
+ #     - .:/app
       - /automacao/config:/secrets:ro
     env_file:
       - ./secrets/.env

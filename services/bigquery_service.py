@@ -1,16 +1,45 @@
-import uuid
 from google.cloud import bigquery
 
-def salvar_inventario(dados_bot: dict, bq_client) -> bool:
-    table_id = "vtal-inventariorede-prd.telegram_bot.tb_ref_foto_bot"
-    row = {
-        "id_registro": str(uuid.uuid4()),
-        "user_id": dados_bot.get('user_id', 0),
-        "idsap": dados_bot.get('idsap', 'N/A'),
-        "hostname": dados_bot.get('hostname', 'N/A'),
-        "localizacao": "POINT(0 0)",
-        **dados_bot.get('dados_ia', {}),
-        "gcs_url": dados_bot.get('gcs_url', 'N/A')
-    }
-    errors = bq_client.insert_rows_json(table_id, [row])
-    return not errors
+# Substitua pelo ID da sua tabela real
+TABELA_ID = "vtal-inventariorede-prd.telegram_bot.tb_ref_foto_bot"
+
+def salvar_inventario(dados, client):
+    rows = [{
+        "id_registro": dados.get('id_registro'),
+        "user_id": int(dados.get('user_id', 123)),
+        "idsap": dados.get('idsap'),
+        "hostname": dados.get('hostname'),
+        "fabricante": dados.get('fabricante'),
+        "modelo": dados.get('modelo'),
+        "funcao": dados.get('funcao'),
+        "serial_number": dados.get('serial_number'),
+        "gcs_url": dados.get('gcs_url'),
+        "localizacao": "POINT(0 0)"
+    }]
+    errors = client.insert_rows_json(TABELA_ID, rows)
+    if errors:
+        raise Exception(f"Erro ao inserir: {errors}")
+
+def atualizar_inventario(dados, client):
+    query = f"""
+        UPDATE `{TABELA_ID}`
+        SET idsap = @idsap,
+            hostname = @hostname,
+            fabricante = @fabricante,
+            modelo = @modelo,
+            funcao = @funcao,
+            serial_number = @serial_number
+        WHERE id_registro = @id_registro
+    """
+    job_config = bigquery.QueryJobConfig(
+        query_parameters=[
+            bigquery.ScalarQueryParameter("idsap", "STRING", dados.get('idsap')),
+            bigquery.ScalarQueryParameter("hostname", "STRING", dados.get('hostname')),
+            bigquery.ScalarQueryParameter("fabricante", "STRING", dados.get('fabricante')),
+            bigquery.ScalarQueryParameter("modelo", "STRING", dados.get('modelo')),
+            bigquery.ScalarQueryParameter("funcao", "STRING", dados.get('funcao')),
+            bigquery.ScalarQueryParameter("serial_number", "STRING", dados.get('serial_number')),
+            bigquery.ScalarQueryParameter("id_registro", "STRING", dados.get('id_registro')),
+        ]
+    )
+    client.query(query, job_config=job_config).result()

@@ -2,38 +2,80 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>AppEquipScan</title>
+    <title>EquipScan | Inventário Inteligente</title>
+    <style>
+        :root { --amarelo-vtal: #FFD919; --preto-vtal: #000000; --cinza-fundo: #F4F5F9; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--cinza-fundo); display: flex; justify-content: center; padding: 40px; }
+        .container { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 100%; max-width: 500px; }
+        .logo { width: 120px; display: block; margin: 0 auto 25px; }
+        .input-group { margin-bottom: 15px; }
+        label { font-weight: 700; font-size: 11px; text-transform: uppercase; display: block; margin-bottom: 5px; }
+        input { width: 100%; padding: 12px; border: 1px solid #C2C6D6; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 14px; background-color: var(--amarelo-vtal); border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        #dataForm { display: none; margin-top: 25px; border-top: 2px solid #eee; padding-top: 25px; }
+    </style>
 </head>
 <body>
-    <h1>Scanner de Equipamentos</h1>
-    
-    <input type="file" id="file-upload" accept="image/*">
-    <button onclick="enviarFoto()">Enviar Foto</button>
+<div class="container">
+    <img src="/static/LogoInventarIAr.jfif" class="logo">
+    <input type="file" id="fileInput" accept="image/*" onchange="previewImage(this)">
+    <img id="preview" style="width:100%; max-height:200px; display:none; margin: 15px 0; border-radius:8px;">
+    <button id="analyzeBtn" onclick="enviarFoto()">Analisar Equipamento</button>
 
-    <script>
-        async function enviarFoto() {
-            const input = document.getElementById('file-upload');
-            if (!input.files[0]) {
-                alert("Por favor, selecione uma imagem.");
-                return;
-            }
-            
-            const formData = new FormData();
-            formData.append('file', input.files[0]);
+    <div id="dataForm">
+        <input type="hidden" id="id_registro">
+        <input type="hidden" id="gcs_url">
+        <div class="input-group"><label>ID SAP (Ativo)</label><input type="text" id="ativo"></div>
+        <div class="input-group"><label>Hostname</label><input type="text" id="hostname"></div>
+        <div class="input-group"><label>Fabricante</label><input type="text" id="fabricante"></div>
+        <div class="input-group"><label>Modelo</label><input type="text" id="modelo"></div>
+        <div class="input-group"><label>Função</label><input type="text" id="funcao"></div>
+        <div class="input-group"><label>Serial Number</label><input type="text" id="serial_number"></div>
+        <button style="background: #000; color: #fff;" onclick="salvarDados()">Confirmar e Salvar</button>
+    </div>
+</div>
 
-            try {
-                const response = await fetch('/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const result = await response.json();
-                alert('IA Identificou: ' + JSON.stringify(result));
-                console.log(result);
-            } catch (error) {
-                alert('Erro ao enviar imagem.');
-            }
+<script>
+    function previewImage(i) {
+        if (i.files && i.files[0]) {
+            const r = new FileReader();
+            r.onload = e => { document.getElementById('preview').src = e.target.result; document.getElementById('preview').style.display = 'block'; }
+            r.readAsDataURL(i.files[0]);
         }
-    </script>
+    }
+
+    async function enviarFoto() {
+        const formData = new FormData();
+        formData.append('file', document.getElementById('fileInput').files[0]);
+        const res = await fetch('/upload', { method: 'POST', body: formData });
+        const result = await res.json();
+        const d = typeof result.dados === 'string' ? JSON.parse(result.dados) : result.dados;
+        
+        document.getElementById('id_registro').value = result.id_registro;
+        document.getElementById('gcs_url').value = result.gcs_url;
+        document.getElementById('hostname').value = d.hostname || d.numero_serie || '';
+        document.getElementById('fabricante').value = d.fabricante || '';
+        document.getElementById('modelo').value = d.modelo || '';
+        document.getElementById('funcao').value = d.funcao || '';
+        document.getElementById('serial_number').value = d.numero_serie || '';
+        document.getElementById('dataForm').style.display = 'block';
+    }
+
+    async function salvarDados() {
+        const payload = {
+            id_registro: document.getElementById('id_registro').value,
+            idsap: document.getElementById('ativo').value,
+            hostname: document.getElementById('hostname').value,
+            fabricante: document.getElementById('fabricante').value,
+            modelo: document.getElementById('modelo').value,
+            funcao: document.getElementById('funcao').value,
+            serial_number: document.getElementById('serial_number').value,
+            gcs_url: document.getElementById('gcs_url').value,
+            user_id: 123
+        };
+        await fetch('/salvar', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+        alert("Dados salvos com sucesso!");
+    }
+</script>
 </body>
 </html>

@@ -81,5 +81,29 @@ docker compose -p app-equip-scan up -d --build
 # Verifique os logs
 docker compose -p app-equip-scan logs -f
 -----------------------------------------------------
+#>> Instalar Dependências do python
+pip install --proxy http://10.130.12.13:82 --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r requirements.txt
 
+#>> Instalar/docker Dependências do python / requirements.txt
+docker compose -p app-equip-scan build --build-arg http_proxy=http://10.130.12.13:82/ --build-arg https_proxy=http://10.130.12.13:82/
 
+curl -X POST -F "file=@/AppEquipScan/static/FotoTeste_553423.jpg" http://10.121.243.101:8081/upload
+-----------------------------------------------------
+
+#>> Verifique o Dockerfile e o build
+# 1. Remova o container e a imagem para garantir que não haja cache
+docker compose -p app-equip-scan down
+docker rmi app-equip-scan-app-equip-scan 
+
+# 2. Force um build limpo sem usar cache
+docker compose -p app-equip-scan build --no-cache
+
+# 3. Suba novamente
+docker compose -p app-equip-scan up -d
+
+-----------------------------------------------------
+##>>> Teste de Autenticação com a chave (via terminal): <<<##
+curl -x "" -H "Authorization: Bearer sk-ym5Joy_fC97pHX1qOIxGnA" \
+-H "Content-Type: application/json" \
+-d '{"model": "gemini-1.5-flash", "messages": [{"role": "user", "content": "Olá"}]}' \
+http://10.121.243.101:8083/v1/chat/completions
