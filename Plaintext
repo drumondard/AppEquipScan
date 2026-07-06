@@ -79,6 +79,15 @@ docker compose -p app-equip-scan down
 docker compose -p app-equip-scan up -d --build
 # Verifique os logs
 docker compose -p app-equip-scan logs -f
+
+>>> Altera o container - Criar novo <<<
+docker compose -p app-equip-scan down -v
+docker compose -p app-equip-scan build --no-cache
+docker compose -p app-equip-scan up -d
+
+>>> Rapido o container <<<
+docker compose -p app-equip-scan up -d --build
+docker compose -p app-equip-scan logs -f
 -----------------------------------------------------
 #>> Instalar Dependências do python
 pip install --proxy http://10.130.12.13:82 --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r requirements.txt

@@ -1,11 +1,21 @@
+# Web Framework
 fastapi>=0.100.0
 uvicorn[standard]>=0.23.0
-python-multipart
+
+# Manipulação de Dados e Arquivos
+python-multipart>=0.0.6
+requests>=2.31.0
+httpx>=0.24.0
+jinja2>=3.1.2
+
+# Google Cloud & IA
 google-cloud-storage>=2.10.0
 google-cloud-bigquery>=3.11.0
+# Caso utilize a SDK antiga (mais comum em tutoriais):
+google-generativeai>=0.3.0
+# Caso utilize a nova SDK:
 google-genai>=0.1.0
-python-dotenv
-jinja2
 openai>=1.0.0
-httpx>=0.24.0
-requests
+
+# Utilitários
+python-dotenv>=1.0.0
