@@ -1,5 +1,4 @@
 name: app-equip-scan
-version: '3.8'
 
 services:
   app-equip-scan:
@@ -14,19 +13,15 @@ services:
     ports:
       - "8081:8081"
     volumes:
-      # Mapeia a pasta local de credenciais para dentro do container
-      ##- /credenciais:/credenciais
- #     - .:/app
+      - .:/app
       - /automacao/config:/secrets:ro
     env_file:
       - ./secrets/.env
     environment:
-      # Caminho da credencial conforme configurado na aplicação
       - GOOGLE_APPLICATION_CREDENTIALS=/app/secrets/vtal-inventariorede-prd.json
-      - FLASK_ENV=production
-      # PROXY
       - http_proxy=http://10.130.12.13:82
       - https_proxy=http://10.130.12.13:82
-    command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8081"]
-
-
+      - BUCKET_NAME=vtal-bucket-inventariorede-prd
+      - BUCKET_PATH=fotos_bot_telegram
+    # Executamos python app.py diretamente para usar o uvicorn interno do seu script
+    command: ["python", "app.py"]

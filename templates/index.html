@@ -2,189 +2,44 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-width=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EquipScan | InventarIAr</title>
-    <style>
-        /* Paleta de Cores V.tal */
-        :root { 
-            --amarelo-vtal: #FFD919; 
-            --roxo-vtal: #6A0DAD; 
-            --preto-vtal: #000000; 
-            --cinza-bg: #F4F5F9;
-            --cinza-borda: #E2E8F0;
-            --erro-bg: #FEE2E2;
-            --erro-texto: #991B1B;
-        }
-
-        body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background: var(--cinza-bg); 
-            margin: 0; 
-            padding: 40px 20px; 
-            color: #333;
-        }
-
-        /* Container Centralizado - Ideal para Desktop */
-        .container { 
-            max-width: 900px; /* Largura ideal para não esticar demais no desktop */
-            margin: 0 auto; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 20px; 
-        }
-
-        .header { text-align: center; margin-bottom: 20px; }
-        .header img { height: 60px; object-fit: contain; }
-
-        /* Estilo Base dos Cards */
-        .card { 
-            background: white; 
-            padding: 30px; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); 
-            border: 1px solid var(--cinza-borda);
-        }
-
-        .section-title { 
-            font-size: 16px; 
-            font-weight: 700; 
-            color: var(--roxo-vtal); 
-            margin-top: 0; 
-            margin-bottom: 20px; 
-            border-bottom: 2px solid var(--amarelo-vtal); 
-            padding-bottom: 8px; 
-            display: inline-block;
-        }
-
-        /* Grids para Formulários */
-        .grid-2-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .grid-3-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-
-        .input-group { display: flex; flex-direction: column; gap: 6px; }
-        label { font-size: 12px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
-        input { 
-            padding: 12px 14px; 
-            border: 1px solid #CBD5E1; 
-            border-radius: 8px; 
-            font-size: 14px; 
-            transition: border-color 0.2s;
-            text-transform: uppercase;
-        }
-        input:focus { outline: none; border-color: var(--roxo-vtal); box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.1); }
-
-        /* Botões */
-        button { 
-            padding: 14px 24px; 
-            border: none; 
-            border-radius: 8px; 
-            font-size: 14px; 
-            font-weight: 700; 
-            cursor: pointer; 
-            transition: transform 0.1s, opacity 0.2s; 
-        }
-        button:active { transform: scale(0.98); }
-        .btn-amarelo { background: var(--amarelo-vtal); color: var(--preto-vtal); }
-        .btn-roxo { background: var(--roxo-vtal); color: white; }
-        .btn-preto { background: var(--preto-vtal); color: white; width: 100%; margin-top: 20px; }
-
-        /* IA Results Moderno */
-        .ia-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .ia-badge { 
-            background: #F8FAFC; 
-            border: 1px solid var(--cinza-borda); 
-            padding: 12px; 
-            border-radius: 8px; 
-            border-left: 4px solid var(--amarelo-vtal);
-        }
-        .ia-badge-label { font-size: 11px; color: #64748B; display: block; margin-bottom: 4px; }
-        .ia-badge-value { font-size: 14px; font-weight: 600; color: #0F172A; word-break: break-all; }
-
-        /* Feedback Visual (Alertas) */
-        .alert-error { 
-            background: var(--erro-bg); 
-            color: var(--erro-texto); 
-            padding: 12px 16px; 
-            border-radius: 8px; 
-            font-weight: 600; 
-            font-size: 14px; 
-            margin-bottom: 20px; 
-            display: none; 
-            border-left: 4px solid var(--erro-texto);
-        }
-
-        .card-match { 
-            padding: 15px; 
-            border: 1px solid #E2E8F0; 
-            border-radius: 8px; 
-            margin-bottom: 10px; 
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .card-match:hover { background: #F1F5F9; }
-        .match-selected { 
-            border: 2px solid var(--amarelo-vtal); 
-            background: #FFFAE6 !important; 
-        }
-
-        /* Ocultar seções iniciais */
-        #iaSection, #sapSection, #dataSection, #listaCheck { display: none; }
-        
-        .card-match { padding: 12px; border: 1px solid var(--cinza-borda); border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; }
-        .card-match:hover { border-color: var(--roxo-vtal); }
-        .match-selected { border: 2px solid var(--amarelo-vtal) !important; background: #fffdf0; }
-    </style>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" type="image/x-icon" href="/static/InventarIAr_favicon.ico">
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <img src="/static/LogoInventarIAr.jfif" alt="Logo Vtal">
+        <img src="/static/LogoInventarIAr.jfif" alt="Logo Vtal" class="logo-img">
     </div>
 
-    <!-- 1. Envio de Foto -->
     <div class="card" id="uploadSection">
         <h2 class="section-title">Análise de Equipamento</h2>
         <div class="grid-2-col" style="align-items: end;">
             <div class="input-group">
                 <label>Selecione a foto do equipamento</label>
-                <input type="file" id="fileInput" accept="image/*">
+                <input type="file" id="fileInput" accept="image/*" onchange="previewImage(this)">
             </div>
             <button id="btnAna" class="btn-amarelo" onclick="enviarFoto()">Analisar com IA</button>
         </div>
-    </div>
-
-    <!-- 2. Resultado IA -->
-    <div class="card" id="iaSection">
-        <h2 class="section-title">Dados Detectados pela InventarIAr</h2>
-        <div class="ia-grid">
-            <div class="ia-badge">
-                <span class="ia-badge-label">MODELO</span>
-                <span class="ia-badge-value" id="out-modelo">-</span>
-            </div>
-            <div class="ia-badge">
-                <span class="ia-badge-label">HOSTNAME</span>
-                <span class="ia-badge-value" id="out-hostname">-</span>
-            </div>
-            <div class="ia-badge">
-                <span class="ia-badge-label">FABRICANTE</span>
-                <span class="ia-badge-value" id="out-fabricante">-</span>
-            </div>
-
-            <div class="ia-badge">
-                <span class="ia-badge-label">Serial Number</span>
-                <span class="ia-badge-value" id="out-serial_number">-</span>
-            </div>
-            <div class="ia-badge">
-                <span class="ia-badge-label">Função</span>
-                <span class="ia-badge-value" id="out-funcao">-</span>
-            </div>
-
-
-
+        
+        <div id="previewContainer" style="display: none; text-align: center;">
+            <img id="preview" src="#" alt="Preview" class="preview-img">
         </div>
     </div>
 
-    <!-- 3. Verificação SAP -->
+    <div class="card" id="iaSection">
+        <h2 class="section-title">Dados Detectados pela InventarIAr</h2>
+        <div class="ia-grid">
+            <div class="ia-badge"><span class="ia-badge-label">MODELO</span><span class="ia-badge-value" id="out-modelo">-</span></div>
+            <div class="ia-badge"><span class="ia-badge-label">HOSTNAME</span><span class="ia-badge-value" id="out-hostname">-</span></div>
+            <div class="ia-badge"><span class="ia-badge-label">FABRICANTE</span><span class="ia-badge-value" id="out-fabricante">-</span></div>
+            <div class="ia-badge"><span class="ia-badge-label">SERIAL</span><span class="ia-badge-value" id="out-serial_number">-</span></div>
+            <div class="ia-badge"><span class="ia-badge-label">FUNÇÃO</span><span class="ia-badge-value" id="out-funcao">-</span></div>
+        </div>
+    </div>
+
     <div class="card" id="sapSection">
         <h2 class="section-title">Localização do Equipamento</h2>
         <div class="grid-2-col" style="align-items: end;">
@@ -200,20 +55,15 @@
         <button class="btn-roxo" style="width: 100%; margin-top: 20px;" onclick="verificarSAP()">Verificar no SAP</button>
     </div>
 
-    <!-- Lista de Seleção (Se encontrar vários) -->
     <div class="card" id="listaCheck">
         <h2 class="section-title">Selecione o Ativo SAP</h2>
         <div id="lista-matches"></div>
         <button class="btn-amarelo" style="width: 100%; margin-top: 15px;" onclick="confirmarMatch()">Confirmar Seleção</button>
     </div>
 
-    <!-- 4. Formulário Final de Gravação -->
     <div class="card" id="dataSection">
         <h2 class="section-title">Confirmação de Inventário</h2>
-        
-        <!-- Alerta integrado de erro -->
         <div id="alertaSAP" class="alert-error">Nenhum modelo compatível encontrado no SAP. Preencha manualmente.</div>
-        
         <input type="hidden" id="id_registro">
         <div class="grid-3-col">
             <div class="input-group"><label>ID SAP (Ativo)</label><input type="text" id="ativo"></div>
@@ -227,148 +77,6 @@
     </div>
 </div>
 
-
-
-<script>
-    let currentData = { id_registro: "", gcs_url: "" };
-
-    function previewImage(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = e => { const p = document.getElementById('preview'); p.src = e.target.result; p.style.display = 'block'; };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    async function enviarFoto() {
-            const btn = document.getElementById('btnAna');
-            btn.innerText = "Processando..."; btn.disabled = true;
-            const formData = new FormData();
-            formData.append('file', document.getElementById('fileInput').files[0]);
-            
-            const res = await fetch('/upload', { method: 'POST', body: formData });
-            const result = await res.json();
-            
-            // Verifica se houve erro na IA
-            if (result.error) {
-                alert("Erro na IA: " + result.error);
-                btn.innerText = "Analisar com IA"; btn.disabled = false;
-                return;
-            }
-
-            const d = typeof result.dados === 'string' ? JSON.parse(result.dados) : result.dados;
-            
-            currentData.id_registro = result.id_registro;
-            currentData.gcs_url = result.gcs_url;
-            
-            // Exibe resultados na tela
-            document.getElementById('out-modelo').innerText = d.modelo || 'Não lido';
-            document.getElementById('out-hostname').innerText = d.hostname || 'Não lido';
-            document.getElementById('out-fabricante').innerText = d.fabricante || 'Não lido';
-            document.getElementById('out-serial_number').innerText = d.numero_serie || 'Não lido';
-            document.getElementById('out-funcao').innerText = d.funcao || 'Não lido';
-            
-            // Preenche o formulário APENAS com o que a IA leu
-            document.getElementById('modelo').value = d.modelo || '';
-            document.getElementById('hostname').value = d.hostname || '';
-            document.getElementById('fabricante').value = d.fabricante || '';
-            document.getElementById('funcao').value = d.funcao || '';
-            document.getElementById('serial_number').value = d.numero_serie || '';
-            
-            document.getElementById('iaSection').style.display = 'block';
-            document.getElementById('sapSection').style.display = 'block';
-            btn.innerText = "Analisar com IA"; btn.disabled = false;
-    }
-
-    async function verificarSAP() {
-        const res = await fetch('/verificar-sap', { method: 'POST', headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({modelo: document.getElementById('modelo').value, uf: document.getElementById('uf_input').value, estacao: document.getElementById('est_input').value}) });
-        const result = await res.json();
-        if (result.encontrados) {
-            document.getElementById('listaCheck').style.display = 'block';
-            let html = "";
-            result.data.forEach(item => html += `<div class="card-match" onclick="sel(this, '${JSON.stringify(item).replace(/"/g, '&quot;')}')"><strong>${item.equipamento}</strong> | Host: ${item.hostname}</div>`);
-            document.getElementById('lista-matches').innerHTML = html;
-        } else {
-            document.getElementById('alertaSAP').style.display = 'block';
-            document.getElementById('dataSection').style.display = 'block';
-        }
-    }
-
-    let selCache = null;
-    function sel(el, data) { 
-        selCache = JSON.parse(data.replace(/&quot;/g, '"')); 
-        document.querySelectorAll('.card-match').forEach(c => c.classList.remove('match-selected'));
-        el.classList.add('match-selected'); 
-    }
-    
-    function confirmarMatch() {
-            if (!selCache) return alert("Por favor, selecione um item da lista.");
-            
-            // Preenche com os dados selecionados no SAP (selCache)
-            document.getElementById('ativo').value = selCache.equipamento || '';
-            document.getElementById('hostname').value = selCache.hostname || '';
-            document.getElementById('fabricante').value = selCache.fabricante || '';
-            document.getElementById('modelo').value = selCache.modelo || '';
-            
-            // NOVOS CAMPOS DO SAP
-            document.getElementById('serial_number').value = selCache.num_serie || '';
-            document.getElementById('funcao').value = selCache.funcao || '';
-            
-            document.getElementById('listaCheck').style.display = 'none';
-            document.getElementById('dataSection').style.display = 'block';
-            
-            alert("Dados do SAP carregados!");
-    }
-
-    async function salvarDados() {
-        const payload = {
-            id_registro: currentData.id_registro,
-            gcs_url: currentData.gcs_url,
-            idsap: document.getElementById('ativo').value,
-            hostname: document.getElementById('hostname').value,
-            fabricante: document.getElementById('fabricante').value,
-            modelo: document.getElementById('modelo').value,
-            funcao: document.getElementById('funcao').value,
-            serial_number: document.getElementById('serial_number').value,
-            uf: document.getElementById('uf_input').value,
-            estacao: document.getElementById('est_input').value
-        };
-        const res = await fetch('/salvar', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
-        if(res.ok) {
-            alert("Dados salvos com sucesso!");
-            limparTela(); // <--- CHAMA A FUNÇÃO DE LIMPEZA AQUI
-        } else {
-            alert("Erro ao salvar.");
-        }
-        
-        
-    }
-
-    function limparTela() {
-    // 1. Resetar o formulário
-    document.getElementById('dataSection').style.display = 'none';
-    document.getElementById('iaSection').style.display = 'none';
-    document.getElementById('sapSection').style.display = 'none';
-    document.getElementById('listaCheck').style.display = 'none';
-    document.getElementById('alertaSAP').style.display = 'none';
-
-    // 2. Limpar inputs e resultados da IA
-    document.getElementById('fileInput').value = ""; // Limpa o input de arquivo
-    const inputs = document.querySelectorAll('input[type="text"]');
-    inputs.forEach(input => input.value = "");
-    
-    // 3. Limpar os Badges de IA
-    document.getElementById('out-modelo').innerText = "-";
-    document.getElementById('out-hostname').innerText = "-";
-    document.getElementById('out-fabricante').innerText = "-";
-    document.getElementById('out-serial_number').innerText = "-";
-    document.getElementById('out-funcao').innerText = "-";
-
-    // 4. Resetar variáveis globais
-    selCache = null;
-    currentData = { id_registro: "", gcs_url: "" };
-    }
-</script>
+<script src="/static/js/main.js"></script>
 </body>
 </html>

@@ -1,16 +1,35 @@
 
+
+
 # Plaintext
 AppEquipScan/
-├── app.py                # Ponto de entrada da aplicação Web (FastAPI/Flask)
-├── bot/                  # Opcional: Manter a lógica do bot se precisar de interface híbrida
+├── assets/                 # Onde ficam os arquivos públicos (acessíveis via browser)
+│   ├── css/
+│   │   └── style.css       # Seu arquivo CSS
+│   └── js/
+│       └── main.js         # Seu arquivo JS
+├── secrets/             # Módulos reutilizados:
+│   ├── .env
+│   ├── vtal-inventariorede-prd.json
 ├── services/             # Módulos reutilizados:
 │   ├── ai_service.py     # Lógica de análise de imagem
 │   ├── gcs_service.py    # Upload para nuvem
 │   └── bigquery_service.py # Inserção de dados
+├── templates/              # Onde ficam os arquivos .html
+│   └── index.html
 ├── static/               # Imagens (logo.png, banner.jpg) e CSS
-├── templates/            # Arquivos HTML (index.html)
+│       └── LogoInventarIAr.jfif
 ├── requirements.txt      # Dependências
-└── .gitignore            # Arquivos ignorados (venv, .env, etc.)
+├── .dockerignore
+├── .gitignore            # Arquivos ignorados (venv, .env, etc.)
+├── app.py                # Ponto de entrada da aplicação Web (FastAPI/Flask)
+├── docker-compose.yml
+├── LICENSE
+├── Plaintext
+├── README.md
+└── requirements.txt
+
+
 
 -----------------------------------------------------
 Servidor: 10.119.13.58

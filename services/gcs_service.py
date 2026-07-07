@@ -2,6 +2,7 @@ from google.cloud import storage
 import os
 
 def upload_file(file_obj, destination_blob_name):
+    print(f"DEBUG GCS: Tentando salvar em {destination_blob_name}")
     """Faz upload de um arquivo para o GCS."""
     # O BUCKET_NAME deve ser apenas o nome do bucket, ex: 'meu-bucket'
     bucket_name = os.getenv("BUCKET_NAME") 

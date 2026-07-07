@@ -1,0 +1,63 @@
+:root { 
+    --amarelo-vtal: #FFD919; 
+    --roxo-vtal: #6A0DAD; 
+    --preto-vtal: #000000; 
+    --cinza-bg: #F4F5F9;
+    --cinza-borda: #E2E8F0;
+    --erro-bg: #FEE2E2;
+    --erro-texto: #991B1B;
+}
+
+.header { 
+    text-align: center; 
+    margin-bottom: 30px; 
+}
+
+.header img { 
+    max-width: 200px;  /* Ajuste este valor para o tamanho desejado */
+    height: auto;      /* Mantém a proporção da imagem */
+    display: block;
+    margin: 0 auto;    /* Centraliza a imagem */
+    object-fit: contain; 
+}
+.logo-img { 
+    width: 150px;       /* Define o tamanho exato da logo no layout */
+    height: 150px;      /* Mantém o aspecto quadrado se necessário */
+    object-fit: contain; /* Garante que a imagem não distorça */
+    display: block;
+    margin: 0 auto 20px auto; /* Centraliza e dá espaço abaixo */
+}
+
+.preview-img {
+    display: block;
+    max-width: 100%;       /* Nunca passa da largura do container pai */
+    max-height: 400px;     /* Limita a altura para não ocupar a tela toda */
+    width: auto;           /* Mantém a proporção */
+    height: auto;
+    margin: 20px auto;     /* Espaçamento */
+    border-radius: 8px;
+    border: 1px solid var(--cinza-borda);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+body { font-family: 'Inter', sans-serif; background: var(--cinza-bg); margin: 0; padding: 40px 20px; color: #333; }
+.container { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+.card { background: white; padding: 30px; border-radius: 12px; border: 1px solid var(--cinza-borda); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+.section-title { font-size: 16px; font-weight: 700; color: var(--roxo-vtal); margin-bottom: 20px; border-bottom: 2px solid var(--amarelo-vtal); padding-bottom: 8px; display: inline-block; }
+.grid-2-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.input-group { display: flex; flex-direction: column; gap: 6px; }
+label { font-size: 12px; font-weight: 600; color: #475569; text-transform: uppercase; }
+input { padding: 12px; border: 1px solid #CBD5E1; border-radius: 8px; text-transform: uppercase; }
+button { padding: 14px 24px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+.btn-amarelo { background: var(--amarelo-vtal); color: var(--preto-vtal); }
+.btn-roxo { background: var(--roxo-vtal); color: white; }
+.btn-preto { background: var(--preto-vtal); color: white; width: 100%; margin-top: 20px; }
+.ia-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+.ia-badge { background: #F8FAFC; padding: 12px; border-radius: 8px; border-left: 4px solid var(--amarelo-vtal); }
+.ia-badge-label { font-size: 11px; color: #64748B; display: block; }
+.ia-badge-value { font-size: 14px; font-weight: 600; }
+.alert-error { background: var(--erro-bg); color: var(--erro-texto); padding: 12px; border-radius: 8px; margin-bottom: 20px; display: none; }
+.card-match { padding: 12px; border: 1px solid var(--cinza-borda); border-radius: 8px; cursor: pointer; transition: 0.2s; }
+.match-selected { border: 2px solid var(--amarelo-vtal) !important; background: #fffdf0; }
+#iaSection, #sapSection, #dataSection, #listaCheck { display: none; }
