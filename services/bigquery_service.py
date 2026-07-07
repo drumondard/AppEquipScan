@@ -7,13 +7,19 @@ def buscar_equipamentos_por_modelo_e_local(modelo: str, uf: str, estacao: str):
     modelo_limpo = "".join(filter(str.isalnum, modelo.upper()))
     localizacao_param = f"{uf.upper()}-{estacao.upper()}"
     query = """
-    SELECT equipamento, hostname, modelo, fabricante, num_serie, funcao
-    FROM `vtal-inventariorede-prd.sap_trusted.vw_eam_ih08_unificada`
-    WHERE UPPER(REGEXP_REPLACE(modelo, r'[^A-Z0-9]', '')) = @modelo
-    AND CONCAT(
-        SPLIT(REGEXP_REPLACE(local_instalacao, r'^I-BR-', ''), '-')[SAFE_OFFSET(0)], '-',
-        SPLIT(REGEXP_REPLACE(local_instalacao, r'^I-BR-', ''), '-')[SAFE_OFFSET(2)]
-    ) = @localizacao
+        SELECT equipamento, hostname, modelo, fabricante, num_serie, funcao, tipo_item
+        FROM `vtal-inventariorede-prd.sap_trusted.vw_eam_ih08_unificada`
+        WHERE (
+            UPPER(REGEXP_REPLACE(modelo, r'[^A-Z0-9]', '')) LIKE CONCAT('%', UPPER(REGEXP_REPLACE(@modelo, r'[^A-Z0-9]', '')), '%')
+            OR
+            UPPER(REGEXP_REPLACE(@modelo, r'[^A-Z0-9]', '')) LIKE CONCAT('%', UPPER(REGEXP_REPLACE(modelo, r'[^A-Z0-9]', '')), '%')        
+        )
+        AND (
+            CONCAT(
+                SPLIT(REGEXP_REPLACE(local_instalacao, r'^I-BR-', ''), '-')[SAFE_OFFSET(0)], '-',
+                SPLIT(REGEXP_REPLACE(local_instalacao, r'^I-BR-', ''), '-')[SAFE_OFFSET(2)]
+            ) = @localizacao
+        )
     """
     job_config = bigquery.QueryJobConfig(
         query_parameters=[
@@ -29,6 +35,7 @@ def salvar_inventario(dados):
         "id_registro": dados.get('id_registro'),
         "user_id": int(dados.get('user_id', 123)),
         "idsap": dados.get('idsap'),
+        "tipo_item": dados.get('tipo_item'),
         "hostname": dados.get('hostname'),
         "fabricante": dados.get('fabricante'),
         "modelo": dados.get('modelo'),
