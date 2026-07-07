@@ -1,5 +1,6 @@
 import os
 import uuid
+import json
 import uvicorn
 from fastapi import FastAPI, Request, UploadFile, File, HTTPException
 from fastapi.staticfiles import StaticFiles
@@ -62,10 +63,15 @@ async def upload_foto(file: UploadFile = File(...)):
         contents = await file.read()
         dados_ia = ai_service.extrair_dados_equipamento(contents)
         
+        dados_ia_str = ai_service.extrair_dados_equipamento(contents)
+        dados_ia_dict = json.loads(dados_ia_str) # Converte a string para dict
+        
         return {
             "id_registro": id_registro, 
-            "gcs_url": gcs_url, 
-            "dados": dados_ia
+            "gcs_url": gcs_url,
+            "dados": dados_ia_dict # Retorna como objeto
+            ##"dados": dados_ia
+            
         }
     except Exception as e:
         print(f"ERRO NO UPLOAD: {e}")

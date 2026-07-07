@@ -32,8 +32,13 @@ async function enviarFoto() {
     document.getElementById('out-modelo').innerText = d.modelo || '-';
     document.getElementById('out-hostname').innerText = d.hostname || '-';
     document.getElementById('out-fabricante').innerText = d.fabricante || '-';
+    document.getElementById('out-serial').innerText = d.numero_serie || '-'; // Adicionado
+    document.getElementById('out-funcao').innerText = d.funcao || '-';       // Adicionado
     
     document.getElementById('modelo').value = d.modelo || '';
+    document.getElementById('serial_number').value = d.numero_serie || ''; // Adicionado
+    document.getElementById('funcao').value = d.funcao || '';             // Adicionado
+
     document.getElementById('iaSection').style.display = 'block';
     document.getElementById('sapSection').style.display = 'block';
     btn.innerText = "Analisar com IA"; btn.disabled = false;
@@ -48,7 +53,11 @@ async function verificarSAP() {
     const result = await res.json();
     if (result.encontrados) {
         document.getElementById('listaCheck').style.display = 'block';
-        document.getElementById('lista-matches').innerHTML = result.data.map(item => `<div class="card-match" onclick="sel(this, '${JSON.stringify(item).replace(/"/g, '&quot;')}')"><strong>${item.equipamento}</strong> | Host: ${item.hostname}</div>`).join('');
+        document.getElementById('lista-matches').innerHTML = result.data.map(item => 
+            `<div class="card-match" onclick="sel(this, '${JSON.stringify(item).replace(/"/g, '&quot;')}')">
+                <strong>ID_SAP: ${item.equipamento}</strong> | <strong>Tipo: ${item.tipo_item}</strong> | <strong>Hostname: ${item.hostname}</strong>
+            </div>
+        `).join('');
     } else {
         document.getElementById('alertaSAP').style.display = 'block';
         document.getElementById('dataSection').style.display = 'block';

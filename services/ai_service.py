@@ -19,12 +19,28 @@ def extrair_dados_equipamento(image_bytes: bytes) -> str:
     try:
         encoded_image = base64.b64encode(image_bytes).decode("utf-8")
         prompt = (
+                "Analise esta imagem de uma etiqueta de equipamento de rede. "
+                "Extraia os dados e responda APENAS com um JSON puro, sem markdown, sem explicações. "
+                "Use estas chaves exatas: 'fabricante', 'modelo', 'funcao', 'numero_serie', 'hostname'. "
+                
+                # Adicione estas instruções para melhorar a detecção:
+                "Regras de extração: "
+                "1. Se o campo 'numero_serie' não estiver explícito, procure por códigos após 'S/N:', 'Serial:', "
+                "ou sequências alfanuméricas longas próximas ao código de barras. "
+                "2. Para 'funcao', infira baseado no modelo ou descrições na etiqueta (ex: 'Switch', 'Router', 'OLT'). "
+                "3. Se realmente não for possível identificar, retorne null. "
+                "Não deixe os campos vazios se houver indícios na etiqueta."
+            )
+        
+        
+        '''
+        prompt = (
             "Analise esta imagem de uma etiqueta de equipamento de rede. "
             "Extraia os dados e responda APENAS com um JSON puro, sem markdown, sem explicações. "
             "Use estas chaves exatas: 'fabricante', 'modelo', 'funcao', 'numero_serie', 'hostname'. "
             "Se algum dado não for encontrado, coloque null."
         )
-
+        '''
         # Usando o modelo definido no seu ambiente ou o que o seu servidor LiteLLM suporta
         # Tente "gemini-3.5-flash" ou apenas "gemini" se o 3.5 falhar
         response = client.chat.completions.create(

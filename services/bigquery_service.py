@@ -35,7 +35,6 @@ def salvar_inventario(dados):
         "id_registro": dados.get('id_registro'),
         "user_id": int(dados.get('user_id', 123)),
         "idsap": dados.get('idsap'),
-        "tipo_item": dados.get('tipo_item'),
         "hostname": dados.get('hostname'),
         "fabricante": dados.get('fabricante'),
         "modelo": dados.get('modelo'),
