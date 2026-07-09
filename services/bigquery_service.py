@@ -3,30 +3,56 @@ from google.cloud import bigquery
 client = bigquery.Client()
 TABELA_ID = "vtal-inventariorede-prd.telegram_bot.tb_ref_foto_bot"
 
-def buscar_equipamentos_por_modelo_e_local(modelo: str, uf: str, estacao: str):
+def buscar_equipamentos_por_modelo_e_local(modelo: str, uf: str, estacao: str, hostname: str = None):
+    # Trata os parâmetros no Python para enviar para a query limpos
     modelo_limpo = "".join(filter(str.isalnum, modelo.upper()))
     localizacao_param = f"{uf.upper()}-{estacao.upper()}"
+    # Garante que o hostname vá em caixa alta se for preenchido, ou None caso contrário
+    hostname_param = hostname.upper().strip() if hostname else None
+
     query = """
+        WITH busca_hostname AS (
+            -- 1. Tenta buscar estritamente pelo hostname passado
+            SELECT equipamento, hostname, modelo, fabricante, num_serie, funcao, tipo_item
+            FROM `vtal-inventariorede-prd.sap_trusted.vw_eam_ih08_unificada`
+            WHERE hostname = @hostname AND @hostname IS NOT NULL
+        )
+
+        -- Se encontrou pelo hostname, retorna direto
+        SELECT equipamento, hostname, modelo, fabricante, num_serie, funcao, tipo_item
+        FROM busca_hostname
+
+        UNION ALL
+
+        -- 2. Se NÃO encontrou pelo hostname (ou se ele veio vazio), executa a busca por modelo/local
         SELECT equipamento, hostname, modelo, fabricante, num_serie, funcao, tipo_item
         FROM `vtal-inventariorede-prd.sap_trusted.vw_eam_ih08_unificada`
-        WHERE (
-            UPPER(REGEXP_REPLACE(modelo, r'[^A-Z0-9]', '')) LIKE CONCAT('%', UPPER(REGEXP_REPLACE(@modelo, r'[^A-Z0-9]', '')), '%')
-            OR
-            UPPER(REGEXP_REPLACE(@modelo, r'[^A-Z0-9]', '')) LIKE CONCAT('%', UPPER(REGEXP_REPLACE(modelo, r'[^A-Z0-9]', '')), '%')        
-        )
-        AND (
-            CONCAT(
-                SPLIT(REGEXP_REPLACE(local_instalacao, r'^I-BR-', ''), '-')[SAFE_OFFSET(0)], '-',
-                SPLIT(REGEXP_REPLACE(local_instalacao, r'^I-BR-', ''), '-')[SAFE_OFFSET(2)]
-            ) = @localizacao
-        )
+        WHERE NOT EXISTS (SELECT 1 FROM busca_hostname)
+          AND (
+                UPPER(REGEXP_REPLACE(modelo, r'[^A-Z0-9]', '')) LIKE CONCAT('%', @modelo, '%')
+                OR
+                UPPER(REGEXP_REPLACE(nao_utilizar1, r'[^A-Z0-9]', '')) LIKE CONCAT('%', @modelo, '%')
+                OR
+                @modelo LIKE CONCAT('%', UPPER(REGEXP_REPLACE(modelo, r'[^A-Z0-9]', '')), '%')
+                OR
+                @modelo LIKE CONCAT('%', UPPER(REGEXP_REPLACE(nao_utilizar1, r'[^A-Z0-9]', '')), '%')       
+          )
+          AND (
+                CONCAT(
+                    SPLIT(REGEXP_REPLACE(local_instalacao, r'^I-BR-', ''), '-')[SAFE_OFFSET(0)], '-',
+                    SPLIT(REGEXP_REPLACE(local_instalacao, r'^I-BR-', ''), '-')[SAFE_OFFSET(2)]
+                ) = @localizacao
+          )
     """
+    
     job_config = bigquery.QueryJobConfig(
         query_parameters=[
             bigquery.ScalarQueryParameter("modelo", "STRING", modelo_limpo),
-            bigquery.ScalarQueryParameter("localizacao", "STRING", localizacao_param)
+            bigquery.ScalarQueryParameter("localizacao", "STRING", localizacao_param),
+            bigquery.ScalarQueryParameter("hostname", "STRING", hostname_param)
         ]
     )
+    
     query_job = client.query(query, job_config=job_config)
     return [dict(row) for row in query_job]
 
